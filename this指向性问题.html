@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 全局环境  this指向全局对象（浏览器环境的window）
+        a = 1; //需要注意的是  此处变量可以使用var声明，可以不声明，但是不能使用let或者const进行声明（点击此处查看不同声明方式之间的区别）
+        console.log(this.a)           //1
+        console.log(window.a)         //1
+
+
+        // 普通函数
+        // 1、严格模式  指向undefined
+        // 2、非严格模式  指向window
+        function foo() {
+            console.log(this)         //window对象
+        }
+        function foo2() {
+            'use strict'
+            console.log(this)        //undefined
+        }
+        foo()
+        foo2()
+
+
+        // call/apply/bind函数调用
+        // 1、call/apply 这两个函数对象到方法能立即执行某个函数，并且将函数中的this绑定到你提供到对象上去
+        // 2、bind 方法永久的绑定函数中的this到指定对象上，并返回一个新函数，将来这个函数无论怎么调用都可以
+        function foo() {
+            console.log(this)
+        }
+        function foo2() {
+            console.log(this)
+        }
+        foo.call({ name: 'aa' })  //{name:'aa'}
+        let aa = foo2.bind({ num: '123' })
+        aa()  //{num: '123'}
+        aa.call({ name: 'aa' })  //{num: '123'}  即使使用了call，也不会改变
+
+
+        // 对象属性方法调用
+        // 作为对象属性方法调用，都指向前面调用函数都那个对象
+        const obj = {
+            name: 'abc',
+            fn: function () {
+                return this
+            }
+        }
+        console.log(obj.fn())
+        console.log(obj.fn() === obj)  //true
+
+
+        // 构造函数调用或者类上下文
+        // this指向的是new出来的那个对象实例本身
+        function Person(name) {
+            console.log(this)
+            this.name = name
+        }
+        const p = new Person('1')
+        console.log(p)  //1
+        const pp = new Person('2')
+        console.log(pp)  //2
+
+
+        // 箭头函数中的this
+        // 箭头函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。
+        const obj2 = {
+            name: "tom",
+            foo() {
+                setTimeout(() => {
+                    console.log(this);
+                }, 1000);
+            },
+        };
+        obj2.foo() // obj
+    </script>
+</body>
+
+</html>
